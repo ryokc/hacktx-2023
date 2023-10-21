@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 function AppAddPurchase() {
   const [newPurchase, setNewPurchase] = useState('');
+  const [purchases, setPurchases] = useState([]);
   
   const addPurchase = () => {
     // Send a POST request to Flask to add a new purchase
