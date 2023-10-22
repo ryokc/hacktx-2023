@@ -76,9 +76,9 @@ class CameraApp:
         self.update()
 
     def talk(self, message):
-        self.engine.say(message)
-        self.engine.runAndWait()
-        self.engine.stop()
+        with self.lock:
+            self.engine.say(message)
+            self.engine.runAndWait()
 
     def update_amount(self, deposit):
 
@@ -94,11 +94,18 @@ class CameraApp:
         print(package)
 
         toadd = 0
-        for p in package['predictions']:
+        for i in range(len(package['predictions'])):
+            p = package['predictions'][i]
             x = p['class'].split("-")[0].lower()
-            # t = threading.Thread(target=self.talk, args=(p['class'].replace("-", " "),))
-            # t.start()
-            # t.join()
+            if i == 0:
+                t = threading.Thread(target=self.talk, args=(p['class'].replace("-", " "),))
+                t.daemon = True
+                t.start()
+            else:
+                s = "and " + p['class'].replace("-", " ")
+                t = threading.Thread(target=self.talk, args=(s,))
+                t.daemon = True
+                t.start()
             print(x)
             #with self.lock:
             w2 = p['width']//2
