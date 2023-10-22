@@ -19,7 +19,7 @@ class CameraApp:
 
         self.root = root
         self.root.title("Camera App")
-        self.root.geometry("1400x670")
+        self.root.geometry("1400x960")
         self.cap = cv2.VideoCapture(0)  # 0 corresponds to the default camera
         
         self.main_frame = ttk.Frame(self.root)
@@ -53,7 +53,7 @@ class CameraApp:
 
         ret, frame = self.cap.read()
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        frame = cv2.resize(frame, (660, 540))
+        frame = cv2.resize(frame, (700, 700))
         self.photo2 = ImageTk.PhotoImage(image=Image.fromarray(frame))
         self.video2_label.config(image=self.photo2)
         self.video2_label.image = self.photo2
@@ -64,14 +64,13 @@ class CameraApp:
         ret, frame = self.cap.read()
         if ret:
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            frame = cv2.resize(frame, (660, 540))
+            frame = cv2.resize(frame, (700, 700))
             file_path = "snapshot.jpg"  # Default file name
             cv2.imwrite(file_path, frame)
             print(f"Snapshot saved as {file_path} in the current directory")
 
         package = self.model.predict("snapshot.jpg", confidence=50, overlap=50).json()
         print(package)
-
         toadd = 0
         for p in package['predictions']:
             x = p['class'].split("-")[0].lower()
@@ -90,7 +89,7 @@ class CameraApp:
             self.amount = self.amount + toadd
         else:
             self.amount = self.amount - toadd
-        
+
         self.photo2 = ImageTk.PhotoImage(image=Image.fromarray(frame))
         self.video2_label.config(image=self.photo2)
         self.video2_label.image = self.photo2
@@ -104,7 +103,7 @@ class CameraApp:
         ret, frame = self.cap.read()
         if ret:
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            frame = cv2.resize(frame, (660, 540))
+            frame = cv2.resize(frame, (700, 700))
             self.photo = ImageTk.PhotoImage(image=Image.fromarray(frame))
             self.video1_label.config(image=self.photo)
             self.video1_label.image = self.photo
