@@ -94,18 +94,14 @@ class CameraApp:
         print(package)
 
         toadd = 0
+        s = ""
         for i in range(len(package['predictions'])):
             p = package['predictions'][i]
             x = p['class'].split("-")[0].lower()
             if i == 0:
-                t = threading.Thread(target=self.talk, args=(p['class'].replace("-", " "),))
-                t.daemon = True
-                t.start()
+                s = s + p['class'].replace("-", " ")
             else:
-                s = "and " + p['class'].replace("-", " ")
-                t = threading.Thread(target=self.talk, args=(s,))
-                t.daemon = True
-                t.start()
+                s = s + ", and " + p['class'].replace("-", " ")
             print(x)
             #with self.lock:
             w2 = p['width']//2
@@ -115,6 +111,9 @@ class CameraApp:
 
             toadd = self.value_dictionary[x] + round(toadd,2)
         
+        t = threading.Thread(target=self.talk, args=(s,))
+        t.daemon = True
+        t.start()
         self.integer_label2.configure(text=f"Classification Output: {round(toadd,2)}")  
         
         if deposit:
